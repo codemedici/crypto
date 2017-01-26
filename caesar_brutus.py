@@ -4,9 +4,10 @@
 # Brute force test each key in the cipher.
 
 CHARACTERS = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
-message = input('Enter a message: ')
 
 def main():
+
+    message = input('Enter a message: ')
 
     hackCaesarCipher()
 
@@ -35,7 +36,7 @@ def caesarCipher(message, key, mode):
 
     print('Key #%s: %s' % (key, translated))
 
-def hackCaesarCipher():
+def hackCaesarCipher(message):
 
     for key in range(len(CHARACTERS)):
         caesarCipher(message, key, 'decrypt')

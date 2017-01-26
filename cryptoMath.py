@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""
+Collection of mathematical function useful for crypto
+"""
+
 # Primality Testing with the Rabin-Miller Algorithm
 # Forked from http://inventwithpython.com/hacking (BSD licensed).
 
@@ -5,7 +11,13 @@ import random
 
 
 def rabinMiller(num):
-    # Returns True if num is a prime number.
+    """ Returns True if num is a prime number.
+
+    >>> rabinMiller(31337)
+    True
+    >>> rabinMiller(1337)
+    False
+    """
 
     s = num - 1
     t = 0
@@ -29,11 +41,16 @@ def rabinMiller(num):
 
 
 def isPrime(num):
-    # Return True if num is a prime number. This function does a quicker
-    # prime number check before calling rabinMiller().
+    """ Return True if num is a prime number. This function does a quicker prime number check before calling rabinMiller().
+
+    >>> isPrime(13)
+    True
+    >>> isPrime(55)
+    False
+    """
 
     if (num < 2):
-        return False 
+        return False
 
     # About 1/3 of the time we can quickly determine if num is not prime
     # by dividing by the first few dozen prime numbers. This is quicker
@@ -66,3 +83,59 @@ def generateLargePrime(keysize=1024):
         num = random.randrange(2**(keysize-1), 2**(keysize))
         if isPrime(num):
             return num
+
+
+# Prime Number Sieve
+# Forked from http://inventwithpython.com/hacking (BSD licensed).
+
+import math
+
+def primeSieve(sieveSize):
+    # Returns a list of prime numbers calculated using the Sieve of Eratosthenes algorithm.
+
+    sieve = [True] * sieveSize
+    sieve[0] = False
+    sieve[1] = False
+
+    # Create the sieve.
+    for i in range(2, int(math.sqrt(sieveSize)) + 1):
+        pointer = i * 2
+        while pointer < sieveSize:
+            sieve[pointer] = False
+            pointer += i
+
+    # Compile the list of primes.
+    primes = []
+    for i in range(sieveSize):
+        if sieve[i] == True:
+            primes.append(i)
+
+    return primes
+
+
+def gcd(a, b):
+    # Use Euclid's algorithm to return the GCD of two numbers.
+    while a != 0:
+        a, b = b % a, a
+    return b
+
+
+def findModInverse(a, m):
+    # Returns the modular inverse of a % m, which is the number
+    # x such that (a * x) % m = 1
+
+    # No mod inverse if a and m aren't relatively prime.
+    if gcd(a, m) != 1:
+        return None
+
+    # Calculate using the Extended Euclidean Algorithm.
+    u1, u2, u3 = 1, 0, a
+    v1, v2, v3 = 0, 1, m
+    while v3 != 0:
+        q = u3 // v3
+        v1, v2, v3, u1, u2, u3 = (u1 - q * v1), (u2 - q * v2), (u3 - q * v3), v1, v2, v3
+    return u1 % m
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
